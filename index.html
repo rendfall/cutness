@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pl-PL" ng-app="app">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Cutness Overload</title>
+
+    <!--[if lte IE 8]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="assets/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/vendors/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/vendors/textAngular/textAngular.css">
+    
+    <link href="assets/css/main.css" rel="stylesheet">
+</head>
+
+<body ng-controller="Note" global-events>
+
+    <div class="navbar-xs">
+        <div class="navbar-primary">
+            <nav class="navbar navbar-fixed-top" role="navigation">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-8">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">OkiCutter</a>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-8">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#menu-toggle" id="menu-toggle">Toggle sidebar</a></li>
+                        <li><a href="#" id="cl-toggle">Toggle cutting lines</a></li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </nav>
+        </div>
+    </div>
+
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+
+            <form class="form-horizontal" role="form">
+                <fieldset>
+
+                    <!-- Form Name -->
+                    <legend>Select file</legend>
+
+                    <div class="something">
+                        <input type="file" on-read-file="showContent($fileContent)" />
+                    </div>
+
+                </fieldset>
+
+                <fieldset>
+                    <legend>Raw HTML in a text area</legend>
+                    <textarea id="rendfall_html" class="cutting-lines" ng-model="htmlcontent" style="width: 100%">
+                        {{ content }}
+                    </textarea>
+                </fieldset>
+                
+            </form>
+         
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12" style="position:relative!important">
+                                
+                                <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent" ta-disabled='disabled'></div>
+                           
+                            
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script src="assets/vendors/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/vendors/angular-1.3.0.min.js"></script>
+    <script src="assets/vendors/textAngular/textAngular-sanitize.min.js"></script>
+    <script src="assets/vendors/textAngular/textAngular.min.js"></script>
+
+
+    <script src="assets/js/core.js"></script>
+
+</body>
+</html>
+
+
+
+<!--
+    $('#rendfall_html').load("layouts/default/main.html", function(response, status, xhr) {
+        if(status == 'error'){
+            alert("I guess your browser doesn't allow load local file by JS. You should run you Chrome with --allow-file-access-from-files parameter");
+        } else {
+
+        }
+    });
+
+    <script>
+        
+
+        var htmlInspector = {
+            $: null,
+            target: {
+                $: null,
+                id: null,
+                classList: null,
+                tagName: null,
+                parents: null,
+                innetText: null,
+                attributes: null
+            },
+            getClassList: function(el){
+                if(typeof el == 'undefined') el = this.target.$;
+                var classList = el.attr('class') ? '.'+el.attr('class').replace(' ', '.') : '';
+                return classList;
+            },
+            getID: function(el){
+                if(typeof el == 'undefined') el = this.target.$;
+                var id = el.attr('id') ? el.attr('id') : '';
+                return id;
+            },
+            getTagName: function(el){
+                if(typeof el == 'undefined') el = this.target.$;
+                var tagName = el.prop('tagName').toLowerCase();
+                return tagName;
+            },
+            getInnerText: function(el){
+                if(typeof el == 'undefined') el = this.target.$;
+                var innerText = el.prop("textContent") ? el.prop("textContent") : '';
+                return innerText;
+            },
+            getAttributes: function(el){
+                if(typeof el == 'undefined') el = this.target.$;
+
+                var _this = this;
+                var oneAttr, attrsList = el[0].attributes;
+                var i = attrsList.length;
+                var attributes = {};
+
+                while (i -){
+                    oneAttr = attrsList[i];
+                    attributes[oneAttr.name] = oneAttr.value;
+                }
+
+                return attributes;
+            },
+            getParents: function(){
+                var _this = this;
+                var parents = this.target.$.parentsUntil(this.$.selector);
+                var current = parents.eq(0);
+                var html = '';
+                
+                parents = parents.not(this.target.$);
+                parents.each(function(){
+                    html += _this.getTagName($(this));
+                    html += _this.getID($(this));
+                    html += _this.getClassList($(this));
+                    html += ' > ';
+                });
+                html += _this.getTagName(current) + _this.getID(current) + _this.getClassList(current);
+                this.target.parents = parents;
+
+                return html;
+            },
+            getTarget: function(tar){
+                this.target.$ = tar;
+                this.target.attributes = this.getAttributes();
+                this.target.parents = this.getParents();
+                this.target.tagName = this.getTagName();
+                this.target.innerText = this.getInnerText();
+                this.target.width = this.target.$.outerWidth(true);
+                this.target.height = this.target.$.outerHeight(true);
+
+                this.target.$.text('{{data.msg}}');
+            },
+            prepareHTML: function(){
+                var _this = this;
+                $('#tutaj').html('');
+
+                $('#sidebar-wrapper legend').text(this.target.tagName);
+
+                $('#tutaj').append('<p>'+this.target.parents+'</p>');
+                $('#tutaj').append('<hr />');
+                $('#tutaj').append('<p>'+this.target.innerText+'</p>');
+                $('#tutaj').append('<hr />');
+
+                var html = '';
+                $.each(this.target.attributes, function(index, value) {
+                    html += _this.createFieldText(value, index);
+                }); 
+                $('#tutaj').append(html);
+
+                //$('#tutaj').append(_this.createFieldText(this.target.width, 'width'));
+                //$('#tutaj').append(_this.createFieldText(this.target.height, 'height'));
+                   
+                
+            },
+            addEvents: function(){
+                var _this = this;
+
+                this.$.on({
+                    "click.htmlInspector": function(e){
+                        var data = {};
+                        _this.getTarget($(e.target));
+                        _this.prepareHTML();
+                        //var parentsHtml = 
+                        //$('#sidebar-wrapper legend').text(parentsHtml);
+
+                        // $('#tutaj').html(function(){
+                        //     var html = '';
+                        //     html = _this.createFieldText(data.$.outerWidth(true));
+
+                        //     return html;
+                        // });
+                    
+                    }
+                })
+            },
+            createFieldText: function(content, label){
+                return '\
+                    <div class="form-group"> \
+                        <label class="col-sm-2 control-label" for="textinput">'+ label +'</label> \
+                        <div class="col-sm-10"> \
+                            <input ng-model="data.msg" type="text" placeholder="null" value="'+ content +'" class="form-control"> \
+                        </div> \
+                    </div> \
+                ';
+            },
+            init: function(el){
+                this.$ = el;
+
+                this.addEvents();
+            },
+            destroy: function(){
+                $(document).off(".htmlInspector");
+            }
+        }
+        //htmlInspector.init($('#rendfall_html'));
+
+-->

@@ -1,0 +1,14 @@
+ .ta-editor {
+    min-height: 300px;
+    height: auto;
+    overflow: auto;
+    font-family: inherit;
+    font-size: 100%;
+    margin:20px 0;
+ }
+
+ .ta-toolbar {
+    position: fixed;
+    top: 35px;
+    z-index: 9999;
+ }
